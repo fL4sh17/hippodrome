@@ -1,3 +1,6 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import static java.util.Objects.isNull;
 
 public class Horse {
@@ -6,22 +9,45 @@ public class Horse {
     private final double speed;
     private double distance;
 
+    private static final Logger log = LogManager.getLogger(Horse.class);
+
     public Horse(String name, double speed, double distance) {
         if (isNull(name)) {
+
+//            Если в конструктор вместо имени передан null, то перед пробросом исключения,
+//            добавить в лог запись вида: 2022-05-31 17:34:59,483 ERROR Horse: Name is null
+            log.error("Name is null");
             throw new IllegalArgumentException("Name cannot be null.");
+
         } else if (name.isBlank()) {
+
+//            Если переданное в конструктор имя пустое, то перед пробросом исключения, добавить в лог запись
+//            вида: 2022-05-31 17:36:44,196 ERROR Horse: Name is blank
+            log.error("Name is blank");
             throw new IllegalArgumentException("Name cannot be blank.");
+
         }
         if (speed < 0) {
+
+//            Если переданная в конструктор скорость меньше нуля, то перед пробросом исключения, добавить в
+//            лог запись вида:2022-05-31 17:40:27,267 ERROR Horse: Speed is negative
+            log.error("Speed is negative");
             throw new IllegalArgumentException("Speed cannot be negative.");
+
         }
         if (distance < 0) {
+//            Если переданная в конструктор дистанция меньше нуля, то перед пробросом исключения,
+//            добавить в лог запись вида: 2022-05-31 17:41:21,938 ERROR Horse: Distance is negative
+            log.error("Distace is negative");
             throw new IllegalArgumentException("Distance cannot be negative.");
         }
 
         this.name = name;
         this.speed = speed;
         this.distance = distance;
+//        В конце конструктора добавить в лог запись вида: 2022-05-31 17:15:25,842 DEBUG Horse:
+//        Создание Horse, имя [Лобстер], скорость [2.8]
+        log.debug("Создание Horse, имя ["+this.name+"], скорость ["+this.speed+"]");
     }
 
     public Horse(String name, double speed) {

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class HippodromeTest {
 
@@ -42,7 +44,21 @@ class HippodromeTest {
     }
 
     @Test
+//    Проверить, что метод вызывает метод move у всех лошадей. При создании объекта Hippodrome передай в
+//    конструктор список из 50 моков лошадей и воспользуйся методом verify.
     void move() {
+        List<Horse>horses = new ArrayList<>();
+
+        for (int i=0; i<50; i++){
+            horses.add(mock(Horse.class));
+        }
+
+        new Hippodrome(horses).move();
+
+        for (Horse horse : horses){
+            verify(horse).move();
+        }
+
     }
 
     @Test

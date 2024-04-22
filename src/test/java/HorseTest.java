@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mockStatic;
 
 class HorseTest {
     @ParameterizedTest
@@ -110,8 +111,28 @@ class HorseTest {
 
 
     @Test
+//    Проверить, что метод вызывает внутри метод getRandomDouble с параметрами 0.2 и 0.9.
+//    Для этого нужно использовать MockedStatic и его метод verify;
     void move() {
+        try (MockedStatic<Horse> mockedStatic = mockStatic(Horse.class)){
+            new Horse("Timur", 13, 25).move();
+            mockedStatic.verify(() -> Horse.getRandomDouble(0.2, 0.9));
+        }
 
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = {0.1, 0.2, 0.3, 123.456, 12.28})
+//    Проверить, что метод присваивает дистанции значение высчитанное по формуле:
+//    distance + speed * getRandomDouble(0.2, 0.9). Для этого нужно замокать getRandomDouble,
+//    чтобы он возвращал определенные значения, которые нужно задать параметризовав тест.
+    void moveCheckDistance(double value){
+        try(MockedStatic<Horse> mockedStatic = mockStatic(Horse.class)){
+            Horse horse = new Horse("Bucephalus", 7, 7);
+            mockedStatic.when(() -> Horse.getRandomDouble(0.2, 0.9)).thenReturn(value);
+            horse.move();
+            assertEquals(7+7*value, horse.getDistance());
+        }
     }
 
 }
